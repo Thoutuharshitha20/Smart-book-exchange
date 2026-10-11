@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Browse Books | Smart Book Exchange{% endblock %}
+{% block content %}
+<section class="hero rounded-4 p-4 p-md-5 mb-4">
+  <div class="row align-items-center g-4">
+    <div class="col-lg-8">
+      <span class="eyebrow">A student-powered library</span>
+      <h1 class="display-5 fw-bold mt-2">Find your next <span>great read.</span></h1>
+      <p class="lead mb-4">Exchange textbooks, donate books, and help learning resources reach more students.</p>
+      <a class="btn btn-primary btn-lg" href="{{ url_for('add_book') }}">List a Book</a>
+    </div>
+    <div class="col-lg-4 text-center"><div class="hero-book">📚</div></div>
+  </div>
+</section>
+<section class="mb-4">
+  <form class="filter-panel row g-2 align-items-end" method="get">
+    <div class="col-md-4"><label class="form-label">Search books</label><input class="form-control" name="q" value="{{ q }}" placeholder="Title, author, subject"></div>
+    <div class="col-md-2"><label class="form-label">Subject</label><select class="form-select" name="subject"><option value="">All subjects</option>{% for s in subjects %}<option value="{{ s.subject }}" {% if selected_subject==s.subject %}selected{% endif %}>{{ s.subject }}</option>{% endfor %}</select></div>
+    <div class="col-md-2"><label class="form-label">Semester</label><select class="form-select" name="semester"><option value="">All semesters</option>{% for s in semesters %}<option value="{{ s.semester }}" {% if selected_semester==s.semester %}selected{% endif %}>{{ s.semester }}</option>{% endfor %}</select></div>
+    <div class="col-md-2"><label class="form-label">Listing type</label><select class="form-select" name="type"><option value="">All types</option><option {% if selected_type=='Exchange' %}selected{% endif %}>Exchange</option><option {% if selected_type=='Donation' %}selected{% endif %}>Donation</option></select></div>
+    <div class="col-md-2 d-grid"><button class="btn btn-dark">Search</button></div>
+  </form>
+</section>
+<div class="d-flex justify-content-between align-items-center mb-3"><div><h2 class="h3 mb-1">Available books</h2><p class="text-secondary mb-0">Choose a book and select “View details &amp; request” to request it.</p></div><span class="badge text-bg-light">{{ books|length }} found</span></div>
+<div class="row g-4">
+{% for book in books %}
+  <div class="col-sm-6 col-lg-4"><article class="book-card h-100">
+    <div class="book-cover">{% if book.image_filename %}<img src="{{ url_for('static', filename='uploads/' ~ book.image_filename) }}" alt="Cover of {{ book.title }}">{% else %}<span>📖</span>{% endif %}<small>{{ book.subject }}</small></div>
+    <div class="p-3 d-flex flex-column">
+      <div class="d-flex gap-2 mb-2"><span class="badge {{ 'text-bg-success' if book.book_type=='Donation' else 'text-bg-primary' }}">{{ book.book_type }}</span><span class="badge text-bg-light">{{ book.semester }}</span></div>
+      <h3 class="h5">{{ book.title }}</h3><p class="text-secondary mb-1">by {{ book.author }}</p>
+      <p class="small text-secondary">Listed by {{ book.owner_name }} · {{ book.condition }}</p>
+      <a class="btn btn-outline-primary mt-auto" href="{{ url_for('book_detail', book_id=book.id) }}">{{ 'View your listing' if session.get('user_id') == book.owner_id else 'View details & request' }}</a>
+    </div>
+  </article></div>
+{% else %}
+  <div class="col-12"><div class="empty-state"><div class="display-6">🔎</div><h3 class="h5 mt-3">No books found</h3><p class="text-secondary">Try another search or be the first to list a book.</p><a class="btn btn-primary" href="{{ url_for('add_book') }}">Add a Book</a></div></div>
+{% endfor %}
+</div>
+{% endblock %}

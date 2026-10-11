@@ -1,0 +1,14 @@
+{% extends "base.html" %}{% block title %}Add a Book{% endblock %}
+{% block content %}<div class="page-heading"><span class="eyebrow">Give a book a new chapter</span><h1 class="h2 fw-bold mt-2">List a book</h1><p class="text-secondary">Add accurate details so another student can find it.</p></div>
+<div class="form-card wide-card"><form method="post" enctype="multipart/form-data">
+<div class="row g-3">
+<div class="col-md-6"><label class="form-label">Book title *</label><input class="form-control" name="title" required></div>
+<div class="col-md-6"><label class="form-label">Author *</label><input class="form-control" name="author" required></div>
+<div class="col-md-6"><label class="form-label">Subject *</label><input class="form-control" name="subject" required placeholder="e.g. Data Structures"></div>
+<div class="col-md-6"><label class="form-label">Semester *</label><select class="form-select" name="semester" required><option value="">Choose semester</option>{% for n in range(1,9) %}<option>Semester {{ n }}</option>{% endfor %}</select></div>
+<div class="col-md-6"><label class="form-label">Book condition *</label><select class="form-select" name="condition" required><option value="">Choose condition</option><option>Like new</option><option>Good</option><option>Used</option></select></div>
+<div class="col-md-6"><label class="form-label">Offer type *</label><select class="form-select" name="book_type" required><option value="">Choose option</option><option>Exchange</option><option>Donation</option></select></div>
+<div class="col-12"><label class="form-label" for="book-image">Book cover photo (optional)</label><input class="form-control" id="book-image" type="file" name="book_image" accept=".jpg,.jpeg,.png,image/jpeg,image/png"><div class="form-text">Upload a clear JPG or PNG image, up to 5 MB, so students can see the actual book.</div></div>
+<div class="col-12"><label class="form-label">Description (optional)</label><textarea class="form-control" name="description" rows="3" placeholder="Edition, notes, or—for an exchange—what you would accept in return"></textarea><div class="form-text">Do not post private contact details or your exact meeting location here. After accepting a request, arrange the handoff by email.</div></div>
+</div><div class="d-flex gap-2 mt-4"><button class="btn btn-primary">Publish book</button><a class="btn btn-outline-secondary" href="{{ url_for('index') }}">Cancel</a></div>
+</form></div>{% endblock %}
